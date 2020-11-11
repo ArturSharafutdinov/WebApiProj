@@ -29,7 +29,7 @@ namespace WebApiProj.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<BookDto>> GetBooks()
         {
-            return _bookService.getAllBooks().ToList();
+            return _bookService.getAllBooks().OrderBy(q => q.BookId).ToList();
         }
 
         // GET: api/Books/5
@@ -43,41 +43,41 @@ namespace WebApiProj.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public IActionResult PutBook(int id, Book book)
+        public IActionResult PutBook(int id, BookDetailDto bookDto)
         {
-            return null;
+            bookDto.BookId = id;
+            _bookService.updateBook(bookDto);
+
+            return NoContent();
+
         }
 
         // POST: api/Books
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public ActionResult<Book> PostBook(Book book)
+        public ActionResult<BookDetailDto> PostBook(BookDetailDto bookDetailDto)
         {
-         
+            _bookService.addBook(bookDetailDto);
 
-            // return CreatedAtAction(nameof(GetBook), new { id = book.BookId }, book);
 
             return NoContent();
         }
 
-        /*
             // DELETE: api/Books/5
            [HttpDelete("{id}")]
-           public ActionResult<Book> DeleteBook(int id)
+           public ActionResult<BookDetailDto> DeleteBook(int id)
            {
-               var book = await _context.Books.FindAsync(id);
+            var book = _bookService.getBookById(id);
                if (book == null)
                {
                    return NotFound();
                }
 
-               _context.Books.Remove(book);
-               await _context.SaveChangesAsync();
+            _bookService.removeBook(id);
 
                return book;
            }
-         */
 
     }
 }

@@ -7,7 +7,7 @@ using WebApiProj.Repositories;
 
 namespace WebApiProj.IServices
 {
-    public interface IBookService : IBookRepository
+    public interface IBookService
     { 
 
 
@@ -18,6 +18,10 @@ namespace WebApiProj.IServices
 
 
         public BookDetailDto getBookById(int id);
+
+        public void updateBook(BookDetailDto bookDto);
+
+        public void removeBook(int id);
 
     }
 }

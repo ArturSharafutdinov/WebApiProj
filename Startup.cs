@@ -39,8 +39,12 @@ namespace WebApiProj
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
+
+
             services.AddTransient<IBookRepository, BookRepository>();
+
             services.AddTransient<IBookService, BookService>();
+
         }
 
 

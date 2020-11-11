@@ -10,11 +10,11 @@ using WebApiProj.Repositories;
 
 namespace WebApiProj.Services
 {
-    public class BookService : BookRepository,IBookService
+    public class BookService : IBookService
     {
-    private readonly BookRepository _bookRep;
+    private readonly IBookRepository _bookRep;
         private readonly IMapper _mapper;
-        public BookService(BookRepository bookRepository, IMapper mapper, BooksContext context) : base(context)
+        public BookService(IBookRepository bookRepository, IMapper mapper)
         {
             _bookRep = bookRepository;
             _mapper = mapper;
@@ -23,7 +23,7 @@ namespace WebApiProj.Services
 
         public void addBook(BookDetailDto bookDto)
         {
-            Book book = _mapper.Map<Book>(bookDto);
+            var book = _mapper.Map<Book>(bookDto);
             _bookRep.Create(book);
             _bookRep.Save();
         }
@@ -35,6 +35,19 @@ namespace WebApiProj.Services
         public BookDetailDto getBookById(int id)
         {
             return _mapper.Map<BookDetailDto>(_bookRep.GetById(id));
+        }
+
+        public void updateBook(BookDetailDto bookDto)
+        {
+            var book = _mapper.Map<Book>(bookDto);
+            _bookRep.Update(book);
+            _bookRep.Save();
+        }
+
+        public void removeBook(int id)
+        {
+            _bookRep.Delete(id);
+            _bookRep.Save();
         }
 
 

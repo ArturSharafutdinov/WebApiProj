@@ -22,7 +22,7 @@ namespace WebApiProj.Repositories
 
         public void Delete(int id)
         {
-            db.Remove(id);
+            db.Remove(db.Books.Find(id));
         }
 
 
