@@ -11,9 +11,9 @@ namespace WebApiProj.Models
         public DbSet<Book> Books { get; set; }
 
 
-        public BooksContext(DbContextOptions<BooksContext> options)
-         : base(options)
+       public BooksContext(DbContextOptions<BooksContext> options) : base(options)
         {
+
         }
 
     }
