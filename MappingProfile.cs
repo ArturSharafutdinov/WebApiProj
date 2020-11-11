@@ -18,6 +18,10 @@ namespace WebApiProj
             CreateMap<BookDetailDto,Book>();
             CreateMap<CommentDto, Comment>();
             CreateMap<Comment, CommentDto>();
+            CreateMap<GroupDto, Group>();
+            CreateMap<Group, GroupDto>();
+            CreateMap<GroupDetailDto, Group>();
+            CreateMap<Group, GroupDetailDto>();
         }
     }
 }
