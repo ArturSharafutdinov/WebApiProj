@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiProj.Dto;
+using WebApiProj.IServices;
 using WebApiProj.Models;
 using WebApiProj.Repositories;
+using WebApiProj.Services;
 
 namespace WebApiProj.Controllers
 {
@@ -16,33 +18,25 @@ namespace WebApiProj.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly BookRepository _bookRep;
-        private readonly IMapper _mapper;
+        private readonly IBookService _bookService;
 
-        public BooksController(BookRepository bookRepository, IMapper mapper)
+        public BooksController(IBookService bookService)
         {
-            _bookRep = bookRepository;
-            _mapper = mapper;
+            _bookService = bookService;
         }
 
         // GET: api/Books
         [HttpGet]
         public ActionResult<IEnumerable<BookDto>> GetBooks()
         {
-            var books = _bookRep.GetBookList();
-            var booksDto = _mapper.Map<List<BookDto>>(books);
-            return booksDto;
+            return _bookService.getAllBooks().ToList();
         }
 
         // GET: api/Books/5
         [HttpGet("{id}")]
         public ActionResult<BookDetailDto> GetBook(int id)
         {
-            var book = _bookRep.GetBook(id);
-
-            var bookDto = _mapper.Map<BookDetailDto>(book);
-
-            return bookDto;
+            return _bookService.getBookById(id);
         }
 
         // PUT: api/Books/5
@@ -51,19 +45,7 @@ namespace WebApiProj.Controllers
         [HttpPut("{id}")]
         public IActionResult PutBook(int id, Book book)
         {
-            if (id != book.BookId)
-            {
-                return BadRequest();
-            }
-
-            if (!_bookRep.Exists(id))
-            {
-                return NotFound();
-            }
-
-            _bookRep.Update(book);
-
-            return NoContent();
+            return null;
         }
 
         // POST: api/Books
@@ -72,8 +54,7 @@ namespace WebApiProj.Controllers
         [HttpPost]
         public ActionResult<Book> PostBook(Book book)
         {
-            _bookRep.Create(book);
-            _bookRep.Save();
+         
 
             // return CreatedAtAction(nameof(GetBook), new { id = book.BookId }, book);
 

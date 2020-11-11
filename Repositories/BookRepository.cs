@@ -7,7 +7,7 @@ using WebApiProj.Models;
 
 namespace WebApiProj.Repositories
 {
-    public class BookRepository : IRepository<Book>
+    public class BookRepository : IBookRepository
     {
         private BooksContext db;
         public BookRepository(BooksContext booksContext)
@@ -26,12 +26,12 @@ namespace WebApiProj.Repositories
         }
 
 
-        public Book GetBook(int id)
+        public Book GetById(int id)
         {
             return db.Books.Find(id);
         }
 
-        public IEnumerable<Book> GetBookList()
+        public IEnumerable<Book> GetAll()
         {
             return db.Books.ToList();
         }
@@ -48,7 +48,7 @@ namespace WebApiProj.Repositories
 
         public bool Exists(int id)
         {
-            return GetBook(id) != null;
+            return GetById(id) != null;
         }
     }
 }

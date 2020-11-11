@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using AutoMapper;
 using WebApiProj.Repositories;
+using WebApiProj.Services;
+using WebApiProj.IServices;
 
 namespace WebApiProj
 {
@@ -28,6 +30,7 @@ namespace WebApiProj
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddEntityFrameworkNpgsql().AddDbContext<BooksContext>(opt=> opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))) ;
             services.AddControllers();
+            services.AddHttpClient();
             var mappingConfig = new MapperConfiguration(mc =>
             {
                 mc.AddProfile(new MappingProfile());
@@ -36,9 +39,8 @@ namespace WebApiProj
 
             IMapper mapper = mappingConfig.CreateMapper();
             services.AddSingleton(mapper);
-            services.AddTransient(typeof(IRepository<>), typeof(Repository<>;));
-            services.AddTransient<IRepository<Book>, BookRepository>();
-
+            services.AddTransient<IBookRepository, BookRepository>();
+            services.AddTransient<IBookService, BookService>();
         }
 
 
