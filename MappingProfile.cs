@@ -16,6 +16,8 @@ namespace WebApiProj
             CreateMap<BookDto, Book>();
             CreateMap<Book, BookDetailDto>();
             CreateMap<BookDetailDto,Book>();
+            CreateMap<CommentDto, Comment>();
+            CreateMap<Comment, CommentDto>();
         }
     }
 }

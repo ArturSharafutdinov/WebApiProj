@@ -29,6 +29,7 @@ namespace WebApiProj
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddEntityFrameworkNpgsql().AddDbContext<BooksContext>(opt=> opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))) ;
+            services.AddEntityFrameworkNpgsql().AddDbContext<CommentsContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
             services.AddHttpClient();
             var mappingConfig = new MapperConfiguration(mc =>
@@ -42,8 +43,12 @@ namespace WebApiProj
 
 
             services.AddTransient<IBookRepository, BookRepository>();
-
             services.AddTransient<IBookService, BookService>();
+
+
+
+            services.AddTransient<ICommentRepository, CommentRepository>();
+            services.AddTransient<ICommentService, CommentService>();
 
         }
 
