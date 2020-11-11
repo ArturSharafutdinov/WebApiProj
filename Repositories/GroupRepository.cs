@@ -49,5 +49,25 @@ namespace WebApiProj.Repositories
         {
             return GetById(id) != null;
         }
+
+        public IEnumerable<Member> GetAllMembersOfGroup(int id)
+        {
+            return db.Members.Where(q => q.GroupId == id).OrderBy(x => x.Id);
+        }
+
+        public IEnumerable<BanMember> GetAllBanMembersOfGroup(int id)
+        {
+            return db.BanMembers.Where(q => q.GroupId == id).OrderBy(x => x.Id);
+        }
+
+        public void CreateMember(Member member)
+        {
+            db.Members.Add(member);
+        }
+
+        public void CreateBanMember(BanMember member)
+        {
+            db.BanMembers.Add(member);
+        }
     }
 }

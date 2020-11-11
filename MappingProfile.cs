@@ -22,6 +22,12 @@ namespace WebApiProj
             CreateMap<Group, GroupDto>();
             CreateMap<GroupDetailDto, Group>();
             CreateMap<Group, GroupDetailDto>();
+
+            CreateMap<Member, MemberDto>();
+            CreateMap<MemberDto, Member>();
+
+            CreateMap<BanMember, BanMemberDto>();
+            CreateMap<BanMemberDto, BanMemberDto>();
         }
     }
 }

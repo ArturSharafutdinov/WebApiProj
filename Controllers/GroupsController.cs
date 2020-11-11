@@ -79,5 +79,20 @@ namespace WebApiProj.Controllers
             return group;
         }
 
+        [HttpPost("{id}")]
+        public ActionResult<MemberDto> PostMember(int id,MemberDto memberDto)
+        {
+            _groupService.AddMemberToGroup(id, memberDto);
+
+            return NoContent();
+        }
+
+        [Route("members")]
+        public ActionResult<IEnumerable<MemberDto>> GetMembers()
+        {
+            int groupId = Convert.ToInt32(HttpContext.Request.Query["id"]);
+            return _groupService.getAllMembers(groupId).ToList();
+        }
+
     }
 }

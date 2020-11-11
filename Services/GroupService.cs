@@ -51,6 +51,30 @@ namespace WebApiProj.Services
             _groupRep.Save();
         }
 
+        public IEnumerable<MemberDto> getAllMembers(int id)
+        {
+            return _mapper.Map<IEnumerable<Member>, IEnumerable<MemberDto>>(_groupRep.GetAllMembersOfGroup(id));
+        }
 
+        public IEnumerable<BanMemberDto> getAllBanMembers(int id)
+        {
+            return _mapper.Map<IEnumerable<BanMember>, IEnumerable<BanMemberDto>>(_groupRep.GetAllBanMembersOfGroup(id));
+        }
+
+        public void AddMemberToGroup(int id,MemberDto memberDto)
+        {
+            var member = _mapper.Map<Member>(memberDto);
+            member.GroupId = id;
+            _groupRep.CreateMember(member);
+            _groupRep.Save();
+        }
+
+        public void AddBanMemberToGroup(int id,BanMemberDto memberDto)
+        {
+            var member = _mapper.Map<BanMember>(memberDto);
+            member.GroupId = id;
+            _groupRep.CreateBanMember(member);
+            _groupRep.Save();
+        }
     }
 }

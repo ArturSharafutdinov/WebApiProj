@@ -13,12 +13,14 @@ namespace WebApiProj.Models
         public int GroupId { get; set; }
         public string Role { get; set; }
 
-        public Member(string userName, int groupId, string Role)
-        {
-            this.GroupId = groupId;
-            this.userName = userName;
-            this.Role = Role;
-        }
+        /*
+                 public Member(string userName, int groupId, string Role)
+                {
+                    this.GroupId = groupId;
+                    this.userName = userName;
+                    this.Role = Role;
+                }
+         */
 
 
 
