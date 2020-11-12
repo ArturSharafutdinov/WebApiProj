@@ -10,12 +10,9 @@ namespace WebApiProj.IServices
     public interface IBookService
     { 
 
-
         public void addBook(BookDetailDto bookDto);
 
-
         public IEnumerable<BookDto> getAllBooks();
-
 
         public BookDetailDto getBookById(int id);
 

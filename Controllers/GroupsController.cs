@@ -53,8 +53,6 @@ namespace WebApiProj.Controllers
         }
 
         // POST: api/Groups
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public ActionResult<GroupDetailDto> PostGroup(GroupDetailDto groupDto)
         {
@@ -78,7 +76,7 @@ namespace WebApiProj.Controllers
 
             return group;
         }
-
+        // POST: api/Groups/5
         [HttpPost("{id}")]
         public ActionResult<MemberDto> PostMember(int id,MemberDto memberDto)
         {
@@ -87,6 +85,8 @@ namespace WebApiProj.Controllers
             return NoContent();
         }
 
+
+        // api/Groups/members?id=5
         [Route("members")]
         public ActionResult<IEnumerable<MemberDto>> GetMembers()
         {

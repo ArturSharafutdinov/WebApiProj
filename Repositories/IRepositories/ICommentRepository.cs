@@ -14,8 +14,7 @@ namespace WebApiProj.Repositories
         void Update(Comment item); // обновление объекта
         void Delete(int id); // удаление объекта по id
         void Save();  // сохранение изменений
-
-        bool Exists(int id);
+        bool Exists(int id);// проверка на null
 
     }
 }

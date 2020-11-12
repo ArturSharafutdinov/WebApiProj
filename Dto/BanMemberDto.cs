@@ -7,7 +7,6 @@ namespace WebApiProj.Models
 {
     public class BanMemberDto
     {
-
         public string userName { get; set; }
         public string Reason { get; set; }
     }

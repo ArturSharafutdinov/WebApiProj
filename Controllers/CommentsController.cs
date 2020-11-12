@@ -34,7 +34,7 @@ namespace WebApiProj.Controllers
             return _commentService.getCommentById(id);
         }
 
-        // GET: api/Comments/author
+        // GET: api/Comments/author?name=""
         [Route("author")]
         public ActionResult<IEnumerable<CommentDto>> GetCommentsByAuthor()
         {
