@@ -51,7 +51,7 @@ namespace WebApiProj.Controllers
             commentDto.CommentId = id;
             _commentService.updateComment(commentDto);
 
-            return NoContent();
+            return Ok("changed");
 
         }
 
@@ -64,7 +64,7 @@ namespace WebApiProj.Controllers
             _commentService.addComment(commentDto);
 
 
-            return NoContent();
+            return Ok("added");
         }
 
         // DELETE: api/Comments/5
@@ -79,7 +79,7 @@ namespace WebApiProj.Controllers
 
             _commentService.removeComment(id);
 
-            return comment;
+            return Ok("removed");
         }
 
     }

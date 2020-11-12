@@ -48,7 +48,7 @@ namespace WebApiProj.Controllers
             groupDto.GroupId = id;
             _groupService.updateGroup(groupDto);
 
-            return NoContent();
+            return Ok("changed");
 
         }
 
@@ -59,7 +59,7 @@ namespace WebApiProj.Controllers
             _groupService.addGroup(groupDto);
 
 
-            return NoContent();
+            return Ok("added");
         }
 
         // DELETE: api/Groups/5
@@ -74,15 +74,15 @@ namespace WebApiProj.Controllers
 
             _groupService.removeGroup(id);
 
-            return group;
+            return Ok("removed");
         }
         // POST: api/Groups/5
         [HttpPost("{id}")]
-        public ActionResult<MemberDto> PostMember(int id,MemberDto memberDto)
+        public ActionResult<MemberDto> PostMember(int id, MemberDto memberDto)
         {
             _groupService.AddMemberToGroup(id, memberDto);
 
-            return NoContent();
+            return Ok("added");
         }
 
 
@@ -93,6 +93,5 @@ namespace WebApiProj.Controllers
             int groupId = Convert.ToInt32(HttpContext.Request.Query["id"]);
             return _groupService.getAllMembers(groupId).ToList();
         }
-
     }
 }
