@@ -1,23 +1,21 @@
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using WebApiProj.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using AutoMapper;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
+using WebApiProj.Extensions;
+using WebApiProj.IServices;
+using WebApiProj.Jwt;
+using WebApiProj.Models;
 using WebApiProj.Repositories;
 using WebApiProj.Services;
-using WebApiProj.IServices;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace WebApiProj
 {
@@ -35,38 +33,21 @@ namespace WebApiProj
             services.AddEntityFrameworkNpgsql().AddDbContext<BooksContext>(opt=> opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))) ;
             services.AddEntityFrameworkNpgsql().AddDbContext<CommentsContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddEntityFrameworkNpgsql().AddDbContext<GroupsContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-            // services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddEntityFrameworkNpgsql().AddDbContext<ApplicationContext>(opt => opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
             services.AddHttpClient();
-            /*
-                services.AddIdentity<IdentityUser, IdentityRole>(options=>
-               {
-                   options.Password.RequireDigit = true;
-                   options.Password.RequireLowercase = true;
-                   options.Password.RequiredLength = 5;
-               }
-               ).AddEntityFrameworkStores<ApplicationContext>()
-               .AddDefaultTokenProviders();
 
-               services.AddAuthentication(auth =>
-               {
-                   auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                   auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-               }
-               ).AddJwtBearer(options =>
-               {
-                   options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                   {
-                       ValidateIssuer = true,
-                       ValidateAudience = true,
-                       RequireExpirationTime = true,
-                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("The key used in encryption")),
-                       ValidateIssuerSigningKey = true,
+            services.AddIdentity<User, Role>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1d);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+            })
+     .AddEntityFrameworkStores<ApplicationContext>()
+     .AddDefaultTokenProviders();
 
-
-                   };
-               });
-             */
 
 
             var mappingConfig = new MapperConfiguration(mc =>
@@ -90,20 +71,29 @@ namespace WebApiProj
             services.AddTransient<IGroupRepository, GroupRepository>();
             services.AddTransient<IGroupService, GroupService>();
 
+
+            services.Configure<JwtSettings>(Configuration.GetSection("Jwt"));
+            var jwtSettings = Configuration.GetSection("Jwt").Get<JwtSettings>();
+            services.AddAuth(jwtSettings);
+
+
+         
+
+
         }
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+
+
+            app.UseHttpsRedirection();
 
             app.UseRouting();
-            app.UseHttpsRedirection();
-            app.UseAuthorization();
+
+            app.UseAuth();
+
 
             app.UseEndpoints(endpoints =>
             {

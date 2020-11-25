@@ -44,6 +44,7 @@ namespace WebApiProj.Repositories
         public void Update(Book item)
         {
             db.Books.Update(item);
+            db.SaveChanges();
         }
 
         public bool Exists(int id)

@@ -51,7 +51,7 @@ namespace WebApiProj.Controllers
 
         // POST: api/Books
         [HttpPost]
-        public ActionResult<BookDetailDto> PostBook(BookDetailDto bookDetailDto)
+        public IActionResult PostBook(BookDetailDto bookDetailDto)
         {
             _bookService.addBook(bookDetailDto);
 
@@ -61,7 +61,7 @@ namespace WebApiProj.Controllers
 
             // DELETE: api/Books/5
            [HttpDelete("{id}")]
-           public ActionResult<BookDetailDto> DeleteBook(int id)
+           public ActionResult DeleteBook(int id)
            {
             var book = _bookService.getBookById(id);
                if (book == null)

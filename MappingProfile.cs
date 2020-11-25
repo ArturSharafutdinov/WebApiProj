@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApiProj.Dto;
 using WebApiProj.Models;
+using WebApiProj.Models.Identity;
 
 namespace WebApiProj
 {
@@ -28,6 +29,9 @@ namespace WebApiProj
 
             CreateMap<BanMember, BanMemberDto>();
             CreateMap<BanMemberDto, BanMemberDto>();
+
+            CreateMap<UserSignUpResource, User>()
+    .ForMember(u => u.UserName, opt => opt.MapFrom(ur => ur.Email));
         }
     }
 }

@@ -7,16 +7,12 @@ using System.Threading.Tasks;
 
 namespace WebApiProj.Models
 {
-    public class ApplicationContext : IdentityDbContext
+    public class ApplicationContext : IdentityDbContext<User, Role, Guid>
     {
-
-        public ApplicationContext(DbContextOptions options) : base(options)
+        public ApplicationContext(DbContextOptions options)
+              : base(options)
         {
-
         }
-
-
-        public DbSet<Customer> Customers { get; set; }
 
     }
 }
