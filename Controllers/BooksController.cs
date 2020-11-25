@@ -27,7 +27,7 @@ namespace WebApiProj.Controllers
 
         // GET: api/Books
         [HttpGet]
-        public ActionResult<IEnumerable<BookDto>> GetBooks()
+        public ActionResult<IEnumerable<BookDetailDto>> GetBooks()
         {
             return _bookService.getAllBooks().OrderBy(q => q.BookId).ToList();
         }

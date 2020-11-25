@@ -28,8 +28,8 @@ namespace WebApiProj.Services
             _bookRep.Save();
         }
 
-        public IEnumerable<BookDto> getAllBooks(){
-            return _mapper.Map<IEnumerable<Book>, IEnumerable<BookDto>>(_bookRep.GetAll());
+        public IEnumerable<BookDetailDto> getAllBooks(){
+            return _mapper.Map<IEnumerable<Book>, IEnumerable<BookDetailDto>>(_bookRep.GetAll());
             }
 
         public BookDetailDto getBookById(int id)

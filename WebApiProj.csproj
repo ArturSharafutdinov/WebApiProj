@@ -22,7 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.csproj" />
+    <None Include="wwwroot\books.html" />
+    <None Include="wwwroot\js\script.js" />
   </ItemGroup>
+
 
 </Project>

@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Список пользователей</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+    <center><h2>Книги</h2></center>
+
+    <div id="container"></div>
+
+    <script type="text/javascript">
+        // Получение всех пользователей
+        async function GetUsers() {
+            // отправляет запрос и получаем ответ
+            const response = await fetch("/api/books", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            // если запрос прошел нормально
+            if (response.ok === true) {
+                // получаем данные
+                const children = await response.json();
+
+                console.log(children);
+
+  
+                var center = document.createElement("center")
+
+
+                var table = document.createElement('table');
+                table.style.width = '50%';
+                
+                table.setAttribute('border', '1');
+                var tbdy = document.createElement('tbody');
+
+                function addHeaders(table, keys) {
+                    var tr = document.createElement('tr');
+                    for (var i = 0; i < keys.length; i++) {
+                        var td = document.createElement('td');
+                        td.appendChild(document.createTextNode(keys[i]));
+                        tr.appendChild(td);
+                    }
+                   tbdy.appendChild(tr);
+                }
+                table.appendChild(tbdy);
+
+
+               
+                for (var i = 0; i < children.length; i++) {
+                    var tr = document.createElement('tr');
+                    var child = children[i];
+                    if (i === 0) {
+                        addHeaders(table, Object.keys(child));
+                    }
+                    var row = table.insertRow();
+                    Object.keys(child).forEach(function (k) {
+                        var td = document.createElement('td');
+                        td.appendChild(document.createTextNode(child[k]));
+                        tr.appendChild(td)
+                    })
+                    tbdy.appendChild(tr);
+                }
+
+                table.appendChild(tbdy);
+
+                center.appendChild(table);
+
+                document.getElementById('container').appendChild(center);
+            }
+
+        }
+
+        // загрузка пользователей
+        GetUsers();
+    </script>
+
+
+</body>
+</html>

@@ -77,7 +77,9 @@ namespace WebApiProj
             services.AddAuth(jwtSettings);
 
 
-         
+
+
+
 
 
         }
@@ -93,6 +95,10 @@ namespace WebApiProj
             app.UseRouting();
 
             app.UseAuth();
+
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
 
             app.UseEndpoints(endpoints =>

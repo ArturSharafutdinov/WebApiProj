@@ -12,7 +12,7 @@ namespace WebApiProj.IServices
 
         public void addBook(BookDetailDto bookDto);
 
-        public IEnumerable<BookDto> getAllBooks();
+        public IEnumerable<BookDetailDto> getAllBooks();
 
         public BookDetailDto getBookById(int id);
 
