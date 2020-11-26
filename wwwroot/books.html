@@ -3,17 +3,98 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Список пользователей</title>
+    <title>Список книг</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        table {
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 14px;
+            border-radius: 10px;
+            border-spacing: 0;
+            text-align: center;
+        }
+
+        th {
+            background: #BCEBDD;
+            color: white;
+            text-shadow: 0 1px 1px #2D2020;
+            padding: 10px 20px;
+        }
+
+        th, td {
+            border-style: solid;
+            border-width: 0 1px 1px 0;
+            border-color: white;
+        }
+
+            th:first-child, td:first-child {
+                text-align: left;
+            }
+
+            th:first-child {
+                border-top-left-radius: 10px;
+            }
+
+            th:last-child {
+                border-top-right-radius: 10px;
+                border-right: none;
+            }
+
+        td {
+            padding: 10px 20px;
+            background: #F8E391;
+        }
+
+        tr:last-child td:first-child {
+            border-radius: 0 0 0 10px;
+        }
+
+        tr:last-child td:last-child {
+            border-radius: 0 0 10px 0;
+        }
+
+        tr td:last-child {
+            border-right: none;
+        }
+    </style>
 </head>
 <body>
-    <center><h2>Книги</h2></center>
+    <center>
+        <h2>Список книг</h2>
+        <table class="table table-condensed table-striped  col-md-6">
+            <thead><tr><th>Id</th><th>Название</th><th>Автор</th><th>Информация</th><th>Ссылка</th><th></th></tr></thead>
+            <tbody>
+            </tbody>
+        </table>
 
-    <div id="container"></div>
+        <form name="bookForm">
+            <input type="hidden" name="id" value="0" />
+            <div class="form-group col-md-5">
+                <label for="name">Имя:</label>
+                <input class="form-control" name="bookName" />
+            </div>
+            <div class="form-group col-md-5">
+                <label for="age">Автор:</label>
+                <input class="form-control" name="bookAuthor" />
+            </div>
+            <div class="form-group col-md-5">
+                <label for="age">Информация:</label>
+                <input class="form-control" name="bookInfo" />
+            </div>
+            <div class="form-group col-md-5">
+                <label for="age">Ссылка:</label>
+                <input class="form-control" name="bookLink" />
+            </div>
+            <div class="panel-body">
+                <button type="submit" id="submit" class="btn btn-primary">Сохранить</button>
+                <a id="reset" class="btn btn-primary">Сбросить</a>
+            </div>
+        </form>
+    </center>
 
-    <script type="text/javascript">
+    <script>
         // Получение всех пользователей
-        async function GetUsers() {
+        async function GetBooks() {
             // отправляет запрос и получаем ответ
             const response = await fetch("/api/books", {
                 method: "GET",
@@ -22,59 +103,184 @@
             // если запрос прошел нормально
             if (response.ok === true) {
                 // получаем данные
-                const children = await response.json();
-
-                console.log(children);
-
-  
-                var center = document.createElement("center")
-
-
-                var table = document.createElement('table');
-                table.style.width = '50%';
-                
-                table.setAttribute('border', '1');
-                var tbdy = document.createElement('tbody');
-
-                function addHeaders(table, keys) {
-                    var tr = document.createElement('tr');
-                    for (var i = 0; i < keys.length; i++) {
-                        var td = document.createElement('td');
-                        td.appendChild(document.createTextNode(keys[i]));
-                        tr.appendChild(td);
-                    }
-                   tbdy.appendChild(tr);
-                }
-                table.appendChild(tbdy);
-
-
-               
-                for (var i = 0; i < children.length; i++) {
-                    var tr = document.createElement('tr');
-                    var child = children[i];
-                    if (i === 0) {
-                        addHeaders(table, Object.keys(child));
-                    }
-                    var row = table.insertRow();
-                    Object.keys(child).forEach(function (k) {
-                        var td = document.createElement('td');
-                        td.appendChild(document.createTextNode(child[k]));
-                        tr.appendChild(td)
-                    })
-                    tbdy.appendChild(tr);
-                }
-
-                table.appendChild(tbdy);
-
-                center.appendChild(table);
-
-                document.getElementById('container').appendChild(center);
+                const books = await response.json();
+                let rows = document.querySelector("tbody");
+                books.forEach(book => {
+                    // добавляем полученные элементы в таблицу
+                    rows.append(row(book));
+                });
             }
+        }
+        // Получение одного пользователя
+        async function GetBook(id) {
+            const response = await fetch("/api/books/" + id, {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (response.ok === true) {
+                const book = await response.json();
+                const form = document.forms["bookForm"];
+                form.elements["id"].value = book.bookId;
+                form.elements["bookName"].value = book.name;
+                form.elements["bookAuthor"].value = book.author;
+                form.elements["bookInfo"].value = book.info;
+                form.elements["bookLink"].value = book.link;
+            }
+        }
+        // Добавление пользователя
+        async function CreateBook(bookName, bookAuthor,bookInfo,bookLink) {
 
+            const response = await fetch("api/books", {
+                method: "POST",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: bookName,
+                    author: bookAuthor,
+                    info: bookInfo,
+                    link : bookLink,
+                })
+            });
+            if (response.ok === true) {
+                const book = await response.json();
+                console.log(book);
+                reset();
+                document.querySelector("tbody").append(row(book));
+            }
+        }
+        // Изменение пользователя
+        async function EditBook(bookId, bookName, bookAuthor, bookInfo, bookLink) {
+            const response = await fetch("api/books/" + parseInt(bookId,10), {
+                method: "PUT",
+                headers: { "Accept": "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    id: parseInt(bookId, 10),
+                    name: bookName,
+                    author: bookAuthor,
+                    info: bookInfo,
+                    link: bookLink,
+                })
+            });
+            if (response.ok === true) {
+                var book = { bookId: bookId, name: bookName, author: bookAuthor, info: bookInfo, link: bookLink };
+                document.querySelector("tr[data-rowid='" + book.bookId + "']").replaceWith(row(book));
+                reset();
+                const book2 = await response.json();
+            }
+        }
+        // Удаление пользователя
+        async function DeleteBook(id) {
+            const token = get_cookie("token");
+            const response = await fetch("/api/books/" + id, {
+                method: "DELETE",
+                headers: {
+                    "Accept": "application/json",
+                    "Authorization": "Bearer " + token  // передача токена в заголовке
+                }
+            });
+            if (response.ok === true) {
+                document.querySelector("tr[data-rowid='" + id + "']").remove();
+                const book = await response.json();
+            }
+            else
+                console.log("Status: ", response.status);
         }
 
+        function get_cookie(cookie_name) {
+            var results = document.cookie.match('(^|;) ?' + cookie_name + '=([^;]*)(;|$)');
+
+            if (results)
+                return (unescape(results[2]));
+            else
+                return null;
+        }
+
+        // создание строки для таблицы
+        function row(book) {
+
+            const tr = document.createElement("tr");
+            tr.setAttribute("data-rowid", book.bookId);
+
+            const idTd = document.createElement("td");
+            idTd.append(book.bookId);
+            tr.append(idTd);
+
+            const nameTd = document.createElement("td");
+            nameTd.append(book.name);
+            tr.append(nameTd);
+
+            const authorTd = document.createElement("td");
+            authorTd.append(book.author);
+            tr.append(authorTd);
+
+
+            const infoTd = document.createElement("td");
+            infoTd.append(book.info);
+            tr.append(infoTd);
+
+            const linkTd = document.createElement("td");
+            linkTd.append(book.link);
+            tr.append(linkTd);
+
+            const linksTd = document.createElement("td");
+
+            const editLink = document.createElement("a");
+            editLink.setAttribute("data-id", book.bookId);
+            editLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            editLink.append("Изменить");
+            editLink.addEventListener("click", e => {
+
+                e.preventDefault();
+                GetBook(book.bookId);
+            });
+            linksTd.append(editLink);
+
+            const removeLink = document.createElement("a");
+            removeLink.setAttribute("data-id", book.bookId);
+            removeLink.setAttribute("style", "cursor:pointer;padding:15px;");
+            removeLink.append("Удалить");
+            removeLink.addEventListener("click", e => {
+
+                e.preventDefault();
+                DeleteBook(book.bookId);
+            });
+
+            linksTd.append(removeLink);
+            tr.appendChild(linksTd);
+
+            return tr;
+        }
+
+        // сброс формы
+        function reset() {
+            const form = document.forms["bookForm"];
+            form.reset();
+            form.elements["id"].value = 0;
+        }
+
+        document.getElementById("reset").click(function (e) {
+
+            e.preventDefault();
+            reset();
+        })
+
+        // отправка формы
+        document.forms["bookForm"].addEventListener("submit", e => {
+            e.preventDefault();
+            const form = document.forms["bookForm"];
+            const id = form.elements["id"].value;
+            const name = form.elements["bookName"].value;
+            const author = form.elements["bookAuthor"].value;
+            const info = form.elements["bookInfo"].value;
+            const link = form.elements["bookLink"].value;
+            if (id == 0)
+                CreateBook(name, author,info,link);
+            else
+                EditBook(id, name, author, info, link);
+        });
+
         // загрузка пользователей
-        GetUsers();
+        GetBooks();
+
     </script>
 
 

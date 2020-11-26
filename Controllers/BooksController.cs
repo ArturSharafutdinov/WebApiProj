@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,10 +20,14 @@ namespace WebApiProj.Controllers
     public class BooksController : ControllerBase
     {
         private readonly IBookService _bookService;
+        private readonly BooksContext _booksContext;
+        private readonly IMapper _mapper;
 
-        public BooksController(IBookService bookService)
+        public BooksController(IBookService bookService, BooksContext booksContext, IMapper mapper)
         {
             _bookService = bookService;
+            _booksContext = booksContext;
+            _mapper = mapper;
         }
 
         // GET: api/Books
@@ -44,6 +49,8 @@ namespace WebApiProj.Controllers
         public IActionResult PutBook(int id, BookDetailDto bookDto)
         {
             bookDto.BookId = id;
+            bookDto.DateIn = DateTime.Now;
+            bookDto.isHave = true;
             _bookService.updateBook(bookDto);
             return Ok("changed");
 
@@ -51,14 +58,18 @@ namespace WebApiProj.Controllers
 
         // POST: api/Books
         [HttpPost]
-        public IActionResult PostBook(BookDetailDto bookDetailDto)
+        public async Task<ActionResult<Book>> PostBook(BookDetailDto bookDetailDto)
         {
-            _bookService.addBook(bookDetailDto);
+           
+            await _booksContext.AddAsync(_mapper.Map<Book>(bookDetailDto));
+            await _booksContext.SaveChangesAsync();
 
+            int lastId = _booksContext.Books.ToList().Max(x => x.BookId);
 
-            return Ok("added");
+            return _booksContext.Books.Find(lastId);
         }
 
+        [Authorize]
             // DELETE: api/Books/5
            [HttpDelete("{id}")]
            public ActionResult DeleteBook(int id)

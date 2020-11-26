@@ -23,7 +23,10 @@
 
   <ItemGroup>
     <None Include="wwwroot\books.html" />
-    <None Include="wwwroot\js\script.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
 
